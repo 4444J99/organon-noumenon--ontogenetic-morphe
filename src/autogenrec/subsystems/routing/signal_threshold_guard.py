@@ -5,7 +5,6 @@ Validates, monitors, and transforms signals as they cross analog-digital
 boundaries, ensuring fidelity and coherence during conversions.
 """
 
-import contextlib
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from enum import Enum, auto
@@ -17,7 +16,7 @@ from ulid import ULID
 
 from autogenrec.bus.topics import SubsystemTopics
 from autogenrec.core.process import ProcessContext
-from autogenrec.core.signals import Message, Signal, SignalDomain
+from autogenrec.core.signals import Message, Signal, SignalDomain, SignalPriority
 from autogenrec.core.subsystem import Subsystem, SubsystemMetadata, SubsystemType
 from autogenrec.core.symbolic import (
     SymbolicInput,
@@ -525,8 +524,10 @@ class SignalThresholdGuard(Subsystem):
         target_domain_str = ctx.metadata.get("target_domain")
         target_domain = None
         if target_domain_str:
-            with contextlib.suppress(KeyError):
+            try:
                 target_domain = SignalDomain[target_domain_str.upper()]
+            except KeyError:
+                pass
 
         for value in input_data.values:
             signal = self._parse_signal(value)

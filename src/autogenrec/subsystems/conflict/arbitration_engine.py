@@ -5,7 +5,7 @@ Governs resolution through structured arbitration, modeling fairness and
 balance in symbolic systems.
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from enum import Enum, auto
 from typing import Any
@@ -438,7 +438,7 @@ class ArbitrationEngine(Subsystem):
         """Phase 4: Create output with verdicts."""
         values: list[SymbolicValue] = []
 
-        for dispute, _deliberation, verdict in intermediate:
+        for dispute, deliberation, verdict in intermediate:
             if verdict:
                 value = SymbolicValue(
                     type=SymbolicValueType.SCHEMA,

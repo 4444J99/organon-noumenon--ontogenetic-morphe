@@ -8,7 +8,7 @@ segmentation, and access control.
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from enum import Enum, auto
-from typing import Any
+from typing import Any, Callable
 
 import structlog
 from pydantic import BaseModel, ConfigDict, Field

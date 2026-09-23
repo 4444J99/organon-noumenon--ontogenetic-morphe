@@ -1,19 +1,31 @@
 """Tests for data infrastructure subsystems: ReferenceManager, ArchiveManager, EchoHandler."""
 
-from datetime import UTC, datetime
-
 import pytest
+from datetime import UTC, datetime, timedelta
 
-from autogenrec.core.signals import Signal
 from autogenrec.core.subsystem import SubsystemType
+from autogenrec.core.signals import Signal, SignalDomain
 from autogenrec.core.symbolic import (
     SymbolicInput,
     SymbolicValue,
     SymbolicValueType,
 )
+from autogenrec.subsystems.data.reference_manager import (
+    Reference,
+    ReferenceEdge,
+    ReferenceGraph,
+    ReferenceManager,
+    ReferenceQuery,
+    ReferenceStatus,
+    ReferenceType,
+    ReferenceValidator,
+    ValidationResult,
+)
 from autogenrec.subsystems.data.archive_manager import (
     ArchiveCategory,
     ArchiveManager,
+    ArchiveRecord,
+    ArchiveStatus,
     RetentionPolicy,
     SearchQuery,
 )
@@ -23,16 +35,6 @@ from autogenrec.subsystems.data.echo_handler import (
     EchoState,
     ReplayStrategy,
     SignalBuffer,
-)
-from autogenrec.subsystems.data.reference_manager import (
-    Reference,
-    ReferenceEdge,
-    ReferenceGraph,
-    ReferenceManager,
-    ReferenceQuery,
-    ReferenceType,
-    ReferenceValidator,
-    ValidationResult,
 )
 
 

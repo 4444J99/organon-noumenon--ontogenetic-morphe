@@ -5,7 +5,6 @@ Transforms symbolic material into structured guidance and insights through
 pattern extraction and interpretation frameworks.
 """
 
-import contextlib
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from enum import Enum, auto
@@ -451,10 +450,12 @@ class SymbolicInterpreter(Subsystem):
 
         # Store framework hint from metadata if present
         if "framework" in input_data.metadata:
-            with contextlib.suppress(KeyError, AttributeError):
+            try:
                 self._active_framework = InterpretiveFramework[
                     input_data.metadata["framework"].upper()
                 ]
+            except (KeyError, AttributeError):
+                pass
 
         if len(valid_values) != len(input_data.values):
             return SymbolicInput(

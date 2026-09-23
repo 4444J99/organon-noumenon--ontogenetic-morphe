@@ -5,11 +5,11 @@ Governs symbolic growth, mutation, and renewal processes, modeling
 expansion, branching, and transformation within recursive systems.
 """
 
-import random
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from enum import Enum, auto
 from typing import Any
+import random
 
 import structlog
 from pydantic import BaseModel, ConfigDict, Field

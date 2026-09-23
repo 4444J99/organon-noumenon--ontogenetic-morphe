@@ -5,7 +5,7 @@ Generates and manages symbolic masks that abstract identity, represent roles
 or states, and help maintain privacy within the system.
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from enum import Enum, auto
 from typing import Any
@@ -280,7 +280,7 @@ class MaskComposer:
         combined_roles: set[str] = set()
         max_opacity = 0.0
 
-        for layer in sorted(layers, key=lambda lyr: lyr.layer_order):
+        for layer in sorted(layers, key=lambda l: l.layer_order):
             parent_mask = self._registry.get_mask(layer.mask_id)
             if not parent_mask:
                 continue

@@ -5,7 +5,6 @@ Governs ingestion, evaluation, and tracking of consumption within the system,
 ensuring safety and balance in symbolic resource usage.
 """
 
-import contextlib
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
@@ -818,8 +817,10 @@ class ConsumptionManager(Subsystem):
         type_str = kwargs.get("resource_type")
         resource_type = None
         if type_str:
-            with contextlib.suppress(KeyError):
+            try:
                 resource_type = ResourceType[type_str.upper()] if isinstance(type_str, str) else type_str
+            except KeyError:
+                pass
 
         rule = RiskRule(
             name=name,

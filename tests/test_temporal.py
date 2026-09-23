@@ -4,6 +4,13 @@ from datetime import UTC, datetime, timedelta
 
 import pytest
 
+from autogenrec.subsystems.temporal.time_manager import (
+    Cycle,
+    CycleType,
+    EventStatus,
+    TimeEvent,
+    TimeManager,
+)
 from autogenrec.subsystems.temporal.evolution_scheduler import (
     EvolutionScheduler,
     GrowthPhase,
@@ -12,15 +19,12 @@ from autogenrec.subsystems.temporal.evolution_scheduler import (
 )
 from autogenrec.subsystems.temporal.location_resolver import (
     LocationResolver,
+    Place,
     PlaceType,
     ResolutionStatus,
     SpatialRelation,
 )
-from autogenrec.subsystems.temporal.time_manager import (
-    CycleType,
-    EventStatus,
-    TimeManager,
-)
+
 
 # ============================================================================
 # TimeManager Tests

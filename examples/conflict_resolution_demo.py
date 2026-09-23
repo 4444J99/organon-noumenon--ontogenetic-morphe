@@ -12,10 +12,12 @@ This shows the academic subsystem:
 PROJECT -> PUBLICATION -> CITATION -> ARCHIVE
 """
 
+from datetime import datetime, UTC, timedelta
 
 from autogenrec.subsystems.academic.academia_manager import (
     AcademiaManager,
     PublicationType,
+    ResearchStatus,
 )
 
 
@@ -62,7 +64,7 @@ def main():
 
     # Start the project
     academia.start_project(project.id)
-    print("  [Started] Status: IN_PROGRESS")
+    print(f"  [Started] Status: IN_PROGRESS")
 
     # Update progress
     milestones = [
@@ -137,9 +139,9 @@ def main():
         ("Pattern Recognition Methods", ["Brown, A."], 2023, "NeurIPS"),
     ]
 
-    print("\n  Adding citations:")
+    print(f"\n  Adding citations:")
     for title, authors, year, venue in citations:
-        academia.add_citation(
+        citation = academia.add_citation(
             title=title,
             authors=authors,
             year=year,
@@ -217,11 +219,11 @@ def main():
 
     stats = academia.get_stats()
 
-    print("  Projects:")
+    print(f"  Projects:")
     print(f"    Total: {stats.total_projects}")
     print(f"    Completed: {stats.completed_projects}")
 
-    print("  Publications:")
+    print(f"  Publications:")
     print(f"    Total: {stats.total_publications}")
     print(f"    Published: {stats.published_count}")
 

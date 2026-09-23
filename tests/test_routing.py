@@ -1,11 +1,10 @@
 """Tests for routing subsystems: NodeRouter and SignalThresholdGuard."""
 
+import pytest
 from datetime import UTC, datetime
 
-import pytest
-
-from autogenrec.core.signals import Signal, SignalDomain
 from autogenrec.core.subsystem import SubsystemType
+from autogenrec.core.signals import Signal, SignalDomain
 from autogenrec.core.symbolic import (
     SymbolicInput,
     SymbolicValue,
@@ -14,6 +13,7 @@ from autogenrec.core.symbolic import (
 from autogenrec.subsystems.routing.node_router import (
     Node,
     NodeRouter,
+    NodeStatus,
     NodeType,
     Route,
     RouteOptimizer,
@@ -22,6 +22,8 @@ from autogenrec.subsystems.routing.node_router import (
     RoutingTable,
 )
 from autogenrec.subsystems.routing.signal_threshold_guard import (
+    ConversionMode,
+    ConversionPolicy,
     DomainConverter,
     SignalThresholdGuard,
     ThresholdPolicy,

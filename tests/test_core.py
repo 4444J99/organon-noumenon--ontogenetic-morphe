@@ -2,17 +2,9 @@
 
 import pytest
 
-from autogenrec.bus.message_bus import MessageBus
-from autogenrec.bus.topics import Topic
-from autogenrec.core.signals import (
-    Echo,
-    Message,
-    MessageType,
-    Signal,
-    SignalDomain,
-)
 from autogenrec.core.symbolic import (
     SymbolicInput,
+    SymbolicOutput,
     SymbolicValue,
     SymbolicValueType,
     narrative,
@@ -21,6 +13,16 @@ from autogenrec.core.symbolic import (
     rule,
     token,
 )
+from autogenrec.core.signals import (
+    Echo,
+    Message,
+    MessageType,
+    Signal,
+    SignalDomain,
+    SignalPriority,
+)
+from autogenrec.bus.topics import Topic
+from autogenrec.bus.message_bus import MessageBus
 
 
 class TestSymbolicValue:

@@ -13,40 +13,28 @@ This shows the complete organon-noumenon architecture in action.
 
 from decimal import Decimal
 
-# Academic subsystems
-from autogenrec.subsystems.academic.academia_manager import (
-    AcademiaManager,
-    PublicationType,
-)
-from autogenrec.subsystems.core_processing.code_generator import (
-    CodeGenerator,
-    OutputLanguage,
-)
-from autogenrec.subsystems.identity.audience_classifier import (
-    AccessLevel,
-    AudienceClassifier,
-    RuleOperator,
-    SegmentType,
-)
-
 # Identity subsystems
 from autogenrec.subsystems.identity.mask_generator import (
     MaskGenerator,
     MaskType,
 )
-from autogenrec.subsystems.temporal.location_resolver import (
-    LocationResolver,
-    PlaceType,
-    SpatialRelation,
+from autogenrec.subsystems.identity.audience_classifier import (
+    AudienceClassifier,
+    SegmentType,
+    AccessLevel,
+    RuleOperator,
 )
 
-# Temporal subsystems
-from autogenrec.subsystems.temporal.time_manager import TimeManager
+# Academic subsystems
+from autogenrec.subsystems.academic.academia_manager import (
+    AcademiaManager,
+    PublicationType,
+)
 
-# Transformation subsystems
-from autogenrec.subsystems.transformation.consumption_manager import (
-    ConsumptionManager,
-    ResourceType,
+# Value subsystems
+from autogenrec.subsystems.value.value_exchange_manager import (
+    ValueExchangeManager,
+    CurrencyType,
 )
 from autogenrec.subsystems.value.blockchain_simulator import BlockchainSimulator
 from autogenrec.subsystems.value.process_monetizer import (
@@ -55,10 +43,22 @@ from autogenrec.subsystems.value.process_monetizer import (
     RevenueModel,
 )
 
-# Value subsystems
-from autogenrec.subsystems.value.value_exchange_manager import (
-    CurrencyType,
-    ValueExchangeManager,
+# Transformation subsystems
+from autogenrec.subsystems.transformation.consumption_manager import (
+    ConsumptionManager,
+    ResourceType,
+)
+from autogenrec.subsystems.core_processing.code_generator import (
+    CodeGenerator,
+    OutputLanguage,
+)
+
+# Temporal subsystems
+from autogenrec.subsystems.temporal.time_manager import TimeManager
+from autogenrec.subsystems.temporal.location_resolver import (
+    LocationResolver,
+    PlaceType,
+    SpatialRelation,
 )
 
 

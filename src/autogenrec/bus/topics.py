@@ -73,7 +73,10 @@ class Topic:
             if len(pattern) == 1:
                 return True
             # Try matching remaining pattern at each position
-            return any(self._match_parts(topic[i:], pattern[1:]) for i in range(len(topic) + 1))
+            for i in range(len(topic) + 1):
+                if self._match_parts(topic[i:], pattern[1:]):
+                    return True
+            return False
 
         if not topic:
             return False
