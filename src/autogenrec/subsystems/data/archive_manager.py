@@ -5,7 +5,8 @@ Ensures structured access across the system and prevents data loss
 through retention policies and systematic organization.
 """
 
-from dataclasses import dataclass, field
+import contextlib
+from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from enum import Enum, auto
 from typing import Any
@@ -538,10 +539,8 @@ class ArchiveManager(Subsystem):
 
             # Override with explicit category
             if "category" in content:
-                try:
+                with contextlib.suppress(KeyError):
                     category = ArchiveCategory[content["category"].upper()]
-                except KeyError:
-                    pass
 
             record = ArchiveRecord(
                 id=content.get("id", str(ULID())),

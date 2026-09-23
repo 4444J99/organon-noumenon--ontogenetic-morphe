@@ -4,11 +4,11 @@ Orchestrator: System startup, shutdown, and lifecycle management.
 Coordinates all subsystems and manages the overall system lifecycle.
 """
 
-from collections.abc import Callable
+from collections.abc import AsyncIterator, Callable
 from contextlib import asynccontextmanager
 from datetime import UTC, datetime
 from enum import Enum, auto
-from typing import Any, AsyncIterator
+from typing import Any
 
 import anyio
 import structlog

@@ -4,13 +4,6 @@ from decimal import Decimal
 
 import pytest
 
-from autogenrec.subsystems.value.value_exchange_manager import (
-    Account,
-    CurrencyType,
-    TransactionStatus,
-    TransactionType,
-    ValueExchangeManager,
-)
 from autogenrec.subsystems.value.blockchain_simulator import (
     BlockchainSimulator,
     ConsensusConfig,
@@ -23,7 +16,11 @@ from autogenrec.subsystems.value.process_monetizer import (
     ProductType,
     RevenueModel,
 )
-
+from autogenrec.subsystems.value.value_exchange_manager import (
+    CurrencyType,
+    TransactionStatus,
+    ValueExchangeManager,
+)
 
 # ============================================================================
 # ValueExchangeManager Tests

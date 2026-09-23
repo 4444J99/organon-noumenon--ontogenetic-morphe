@@ -660,7 +660,7 @@ class BlockchainSimulator(Subsystem):
 
     def get_stats(self) -> ChainStats:
         """Get blockchain statistics."""
-        confirmed = len([
+        len([
             t for t in self._chain._transactions.values()
             if t and t.state == TransactionState.CONFIRMED
         ])

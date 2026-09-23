@@ -5,7 +5,7 @@ Orchestrates academic processes including research projects, learning cycles,
 publications, and scholarly knowledge dissemination.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from enum import Enum, auto
 from typing import Any
@@ -422,9 +422,7 @@ class CitationManager:
         query_lower = query.lower()
         results = []
         for citation in self._citations.values():
-            if query_lower in citation.title.lower():
-                results.append(citation)
-            elif any(query_lower in author.lower() for author in citation.authors):
+            if query_lower in citation.title.lower() or any(query_lower in author.lower() for author in citation.authors):
                 results.append(citation)
         return results
 

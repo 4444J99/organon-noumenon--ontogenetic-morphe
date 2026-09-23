@@ -4,15 +4,42 @@ These tests verify that subsystems can work together to accomplish
 complex workflows spanning multiple components.
 """
 
-from datetime import datetime, timedelta, UTC
+from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 
-import pytest
-
-# Import all subsystems we'll test together
-from autogenrec.subsystems.value.value_exchange_manager import (
-    ValueExchangeManager,
-    CurrencyType,
+from autogenrec.subsystems.academic.academia_manager import (
+    AcademiaManager,
+    PublicationType,
+)
+from autogenrec.subsystems.core_processing.code_generator import (
+    CodeGenerator,
+    OutputLanguage,
+)
+from autogenrec.subsystems.identity.audience_classifier import (
+    AccessLevel,
+    AudienceClassifier,
+    RuleOperator,
+    SegmentType,
+)
+from autogenrec.subsystems.identity.mask_generator import (
+    MaskGenerator,
+    MaskType,
+)
+from autogenrec.subsystems.temporal.evolution_scheduler import EvolutionScheduler
+from autogenrec.subsystems.temporal.location_resolver import (
+    LocationResolver,
+    PlaceType,
+    ResolutionStatus,
+    SpatialRelation,
+)
+from autogenrec.subsystems.temporal.time_manager import CycleType, TimeManager
+from autogenrec.subsystems.transformation.consumption_manager import (
+    ConsumptionManager,
+    ResourceType,
+)
+from autogenrec.subsystems.transformation.process_converter import (
+    ConversionFormat,
+    ProcessConverter,
 )
 from autogenrec.subsystems.value.blockchain_simulator import BlockchainSimulator
 from autogenrec.subsystems.value.process_monetizer import (
@@ -20,42 +47,12 @@ from autogenrec.subsystems.value.process_monetizer import (
     ProductType,
     RevenueModel,
 )
-from autogenrec.subsystems.identity.mask_generator import (
-    MaskGenerator,
-    MaskType,
-)
-from autogenrec.subsystems.identity.audience_classifier import (
-    AudienceClassifier,
-    SegmentType,
-    AccessLevel,
-    RuleOperator,
-)
-from autogenrec.subsystems.transformation.process_converter import (
-    ProcessConverter,
-    ConversionFormat,
-)
-from autogenrec.subsystems.transformation.consumption_manager import (
-    ConsumptionManager,
-    ResourceType,
-    RiskLevel,
-)
-from autogenrec.subsystems.core_processing.code_generator import (
-    CodeGenerator,
-    OutputLanguage,
-)
-from autogenrec.subsystems.academic.academia_manager import (
-    AcademiaManager,
-    PublicationType,
-)
-from autogenrec.subsystems.temporal.time_manager import TimeManager, CycleType
-from autogenrec.subsystems.temporal.evolution_scheduler import EvolutionScheduler
-from autogenrec.subsystems.temporal.location_resolver import (
-    LocationResolver,
-    PlaceType,
-    SpatialRelation,
-    ResolutionStatus,
-)
 
+# Import all subsystems we'll test together
+from autogenrec.subsystems.value.value_exchange_manager import (
+    CurrencyType,
+    ValueExchangeManager,
+)
 
 # ============================================================================
 # Integration Test: Value Flow Pipeline
@@ -348,12 +345,12 @@ class TestAcademicResearchIntegration:
         )
 
         # Add citations
-        citation1 = academia.add_citation(
+        academia.add_citation(
             title="Prior Work on Symbols",
             authors=["Smith, J.", "Doe, A."],
             year=2023,
         )
-        citation2 = academia.add_citation(
+        academia.add_citation(
             title="Data Processing Fundamentals",
             authors=["Johnson, B."],
             year=2022,
@@ -484,7 +481,7 @@ class TestFullSystemIntegration:
         monetizer.activate_process(algorithm.id)
 
         # 4. Create masked identity for researcher
-        researcher_mask = masks.generate_mask(
+        masks.generate_mask(
             name="researcher_public_identity",
             mask_type=MaskType.PSEUDONYMOUS,
             entity_id="researcher_1",
@@ -538,7 +535,7 @@ class TestFullSystemIntegration:
         consumption = ConsumptionManager()
 
         # 1. Create audience segments
-        free_tier = classifier.create_segment(
+        classifier.create_segment(
             name="free",
             access_level=AccessLevel.BASIC,
             is_default=True,
@@ -571,12 +568,12 @@ class TestFullSystemIntegration:
         classifier.classify_member(premium_user.id)
 
         # 4. Create masks based on access
-        free_mask = masks.generate_mask(
+        masks.generate_mask(
             name="free_access",
             mask_type=MaskType.ROLE,
             roles=["basic_viewer"],
         )
-        premium_mask = masks.generate_mask(
+        masks.generate_mask(
             name="premium_access",
             mask_type=MaskType.ROLE,
             roles=["full_access", "download"],
@@ -618,7 +615,7 @@ class TestFullSystemIntegration:
                 assert result.approved is False
 
         # Premium user has much higher quota
-        for i in range(100):
+        for _i in range(100):
             event = consumption.create_event(
                 "user_premium",
                 ResourceType.API_CALL,

@@ -5,7 +5,7 @@ Governs trade and exchange of value, ensures balanced distribution and
 recognition of symbolic resources, facilitating fair and consistent transactions.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from decimal import Decimal
 from enum import Enum, auto
