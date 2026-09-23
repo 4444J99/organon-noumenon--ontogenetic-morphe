@@ -37,7 +37,7 @@ dev = [
 ]
 
 [project.scripts]
-autogenrec = "autogenrec.runtime.__main__:main"
+autogenrec = "autogenrec.__main__:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/autogenrec"]
