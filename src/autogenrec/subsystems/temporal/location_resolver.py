@@ -637,9 +637,8 @@ class LocationResolver(Subsystem):
                 place_type = PlaceType.PHYSICAL
 
             coordinates = None
-            if coords := content.get("coordinates"):
-                if isinstance(coords, (list, tuple)) and len(coords) >= 3:
-                    coordinates = tuple(float(c) for c in coords[:3])
+            if (coords := content.get("coordinates")) and isinstance(coords, (list, tuple)) and len(coords) >= 3:
+                coordinates = tuple(float(c) for c in coords[:3])
 
             return Place(
                 id=content.get("id", str(ULID())),
@@ -813,9 +812,8 @@ class LocationResolver(Subsystem):
     ) -> Place:
         """Create and register a new place."""
         coordinates = None
-        if coords := kwargs.get("coordinates"):
-            if isinstance(coords, (list, tuple)) and len(coords) >= 3:
-                coordinates = tuple(float(c) for c in coords[:3])
+        if (coords := kwargs.get("coordinates")) and isinstance(coords, (list, tuple)) and len(coords) >= 3:
+            coordinates = tuple(float(c) for c in coords[:3])
 
         place = Place(
             name=name,

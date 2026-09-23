@@ -5,7 +5,7 @@ Provides adaptive pathways and dynamic routing configuration across
 the symbolic system.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from enum import Enum, auto
 from typing import Any
@@ -16,7 +16,7 @@ from ulid import ULID
 
 from autogenrec.bus.topics import SubsystemTopics
 from autogenrec.core.process import ProcessContext
-from autogenrec.core.signals import Message, Signal, SignalPriority
+from autogenrec.core.signals import Message, Signal
 from autogenrec.core.subsystem import Subsystem, SubsystemMetadata, SubsystemType
 from autogenrec.core.symbolic import (
     SymbolicInput,

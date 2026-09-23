@@ -17,7 +17,7 @@ from ulid import ULID
 from autogenrec.bus.topics import SubsystemTopics, SystemTopics, Topic
 from autogenrec.core.process import ProcessContext
 from autogenrec.core.registry import ProcessRegistry, SubsystemRegistry
-from autogenrec.core.signals import Message, MessageType
+from autogenrec.core.signals import Message
 from autogenrec.core.subsystem import Subsystem, SubsystemMetadata, SubsystemType
 from autogenrec.core.symbolic import (
     SymbolicInput,

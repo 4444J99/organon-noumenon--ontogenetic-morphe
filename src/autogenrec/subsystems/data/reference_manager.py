@@ -5,7 +5,7 @@ Manages a reference graph that provides stable anchoring for recursive
 knowledge across all subsystems.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from enum import Enum, auto
 from typing import Any

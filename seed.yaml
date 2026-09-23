@@ -12,20 +12,26 @@ metadata:
   implementation_status: ACTIVE
   tier: standard
   promotion_status: CANDIDATE
-  last_validated: "2026-02-11"
+  last_validated: "2026-03-08"
   generated: "2026-02-17"
   sprint: "SENSORIA"
   language: python
+  package_name: organon-noumenon--ontogenetic-morphe
+  install_command: pip install organon-noumenon--ontogenetic-morphe
+  release_artifact: dist/organon_noumenon_ontogenetic_morphe-*.whl
+  docs_url: https://organvm-i-theoria.github.io/organon-noumenon--ontogenetic-morphe/
 
 agents:
   - name: ci
     trigger: on_push
-    workflow: .github/workflows/ci-python.yml
-    description: "Continuous integration pipeline"
+    workflow: .github/workflows/ci.yml
+    description: "Continuous integration, release artifact build, and docs deployment pipeline"
 
 produces:
   - type: theory
     description: "Epistemological frameworks, recursive engines, ontological systems"
+  - type: package
+    description: "PyPI wheel/sdist release artifact and docs site"
 
 consumes: []
 

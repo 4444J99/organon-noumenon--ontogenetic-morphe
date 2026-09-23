@@ -3,27 +3,21 @@
 from datetime import timedelta
 from decimal import Decimal
 
-import pytest
-
-from autogenrec.subsystems.transformation.process_converter import (
-    ProcessConverter,
-    ConversionFormat,
-    ConversionStrategy,
-    ConversionStatus,
+from autogenrec.subsystems.core_processing.code_generator import (
+    CodeGenerator,
+    GenerationStrategy,
+    OutputLanguage,
 )
 from autogenrec.subsystems.transformation.consumption_manager import (
     ConsumptionManager,
     ResourceType,
     RiskLevel,
-    ConsumptionStatus,
 )
-from autogenrec.subsystems.core_processing.code_generator import (
-    CodeGenerator,
-    OutputLanguage,
-    GenerationStrategy,
-    ValidationStatus,
+from autogenrec.subsystems.transformation.process_converter import (
+    ConversionFormat,
+    ConversionStrategy,
+    ProcessConverter,
 )
-
 
 # ============================================================================
 # ProcessConverter Tests
@@ -219,7 +213,7 @@ class TestConverterStats:
         p2 = pc.register_process(name="p2")
         pc.convert(p1.id, ConversionFormat.JSON)
         pc.convert(p2.id, ConversionFormat.YAML)
-        
+
         stats = pc.get_stats()
         assert stats.total_processes == 2
         assert stats.successful_conversions == 2
@@ -230,7 +224,7 @@ class TestConverterStats:
         pc = ProcessConverter()
         pc.register_process(name="p1")
         pc.add_rule("r1", "*", "{{ name }}")
-        
+
         processes, rules, outputs = pc.clear()
         assert processes == 1
         assert rules == 1
@@ -323,12 +317,12 @@ class TestConsumptionQuotas:
             max_amount=Decimal("10"),
             consumer_id="user_123",
         )
-        
+
         # First consumption should succeed
         event1 = cm.create_event("user_123", ResourceType.TOKEN, Decimal("8"))
         result1 = cm.consume(event1)
         assert result1.approved is True
-        
+
         # Second consumption should fail (quota exceeded)
         event2 = cm.create_event("user_123", ResourceType.TOKEN, Decimal("5"))
         result2 = cm.consume(event2)
@@ -343,7 +337,7 @@ class TestConsumptionQuotas:
             resource_type=ResourceType.TOKEN,
             max_amount=Decimal("100"),
         )
-        
+
         event = cm.create_event("any_user", ResourceType.TOKEN, Decimal("50"))
         result = cm.consume(event)
         assert result.approved is True
@@ -357,7 +351,7 @@ class TestConsumptionQuotas:
             max_amount=Decimal("100"),
             consumer_id="user_123",
         )
-        
+
         allowed, remaining = cm.check_quota("user_123", ResourceType.TOKEN, Decimal("30"))
         assert allowed is True
         assert remaining == Decimal("100")
@@ -386,7 +380,7 @@ class TestRiskRules:
             condition="amount>1000",
             risk_level=RiskLevel.CRITICAL,
         )
-        
+
         event = cm.create_event("user", ResourceType.TOKEN, Decimal("2000"))
         result = cm.consume(event)
         assert result.approved is False
@@ -400,7 +394,7 @@ class TestRiskRules:
             condition="tag:dangerous",
             risk_level=RiskLevel.HIGH,
         )
-        
+
         event = cm.create_event(
             "user",
             ResourceType.TOKEN,
@@ -416,11 +410,11 @@ class TestConsumptionMetrics:
     def test_get_metrics(self):
         """Test getting usage metrics."""
         cm = ConsumptionManager()
-        
-        for i in range(5):
+
+        for _i in range(5):
             event = cm.create_event("user_123", ResourceType.TOKEN, Decimal("10"))
             cm.consume(event)
-        
+
         metrics = cm.get_metrics(
             "user_123",
             ResourceType.TOKEN,
@@ -432,11 +426,11 @@ class TestConsumptionMetrics:
     def test_get_consumer_events(self):
         """Test getting events for a consumer."""
         cm = ConsumptionManager()
-        
-        for i in range(3):
+
+        for _i in range(3):
             event = cm.create_event("user_123", ResourceType.TOKEN)
             cm.consume(event)
-        
+
         events = cm.get_consumer_events("user_123")
         assert len(events) == 3
 
@@ -449,10 +443,10 @@ class TestConsumptionStats:
         cm = ConsumptionManager()
         cm.add_quota("q1", ResourceType.TOKEN, Decimal("100"))
         cm.add_risk_rule("r1", "always", RiskLevel.LOW)
-        
+
         event = cm.create_event("user", ResourceType.TOKEN, Decimal("10"))
         cm.consume(event)
-        
+
         stats = cm.get_stats()
         assert stats.total_events == 1
         assert stats.total_quotas == 1
@@ -465,7 +459,7 @@ class TestConsumptionStats:
         cm.add_risk_rule("r1", "always", RiskLevel.LOW)
         event = cm.create_event("user", ResourceType.TOKEN)
         cm.consume(event)
-        
+
         events, quotas, rules = cm.clear()
         assert events == 1
         assert quotas == 1
@@ -645,7 +639,7 @@ class TestCodeTemplates:
             applies_to=["function"],
             priority=100,  # High priority
         )
-        
+
         structure = cg.register_structure(
             name="my_func",
             structure_type="function",
@@ -663,7 +657,7 @@ class TestCodeValidation:
         cg = CodeGenerator()
         structure = cg.register_structure(name="valid_python")
         result = cg.generate(structure.id, OutputLanguage.PYTHON)
-        
+
         validation = cg.validate(result.code_id)
         assert validation.valid is True
         assert len(validation.errors) == 0
@@ -673,7 +667,7 @@ class TestCodeValidation:
         cg = CodeGenerator()
         structure = cg.register_structure(name="valid_json")
         result = cg.generate(structure.id, OutputLanguage.JSON)
-        
+
         validation = cg.validate(result.code_id)
         assert validation.valid is True
 
@@ -690,7 +684,7 @@ class TestExecutionPlans:
             outputs=["y"],
         )
         gen_result = cg.generate(structure.id, OutputLanguage.PYTHON)
-        
+
         plan = cg.create_execution_plan(gen_result.code_id)
         assert plan is not None
         assert len(plan.steps) == 4
@@ -719,7 +713,7 @@ class TestGeneratorConvenience:
         cg = CodeGenerator()
         structure = cg.register_structure(name="test")
         result = cg.generate(structure.id, OutputLanguage.PYTHON)
-        
+
         code = cg.get_code(result.code_id)
         assert code is not None
         assert code.id == result.code_id
@@ -735,7 +729,7 @@ class TestGeneratorStats:
         s2 = cg.register_structure(name="s2")
         cg.generate(s1.id, OutputLanguage.PYTHON)
         cg.generate(s2.id, OutputLanguage.JAVASCRIPT)
-        
+
         stats = cg.get_stats()
         assert stats.total_structures == 2
         assert stats.total_generated == 2
@@ -747,7 +741,7 @@ class TestGeneratorStats:
         cg = CodeGenerator()
         cg.register_structure(name="s1")
         cg.add_template("t1", OutputLanguage.PYTHON, "# template")
-        
+
         structures, templates, generated = cg.clear()
         assert structures == 1
         assert templates == 1

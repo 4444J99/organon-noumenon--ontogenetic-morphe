@@ -186,36 +186,33 @@ class ConflictDetector:
             return None
 
         # Same source might indicate duplicate/conflict
-        if v1.source_subsystem == v2.source_subsystem:
-            if v1.content != v2.content:
-                return Conflict(
-                    conflict_type=ConflictType.DATA,
-                    severity=ConflictSeverity.MEDIUM,
-                    values=(
-                        ConflictingValue(
-                            value=v1.content,
-                            source=v1.source_subsystem or "unknown",
-                            priority=0,
-                            tags=v1.tags,
-                        ),
-                        ConflictingValue(
-                            value=v2.content,
-                            source=v2.source_subsystem or "unknown",
-                            priority=0,
-                            tags=v2.tags,
-                        ),
+        if v1.source_subsystem == v2.source_subsystem and v1.content != v2.content:
+            return Conflict(
+                conflict_type=ConflictType.DATA,
+                severity=ConflictSeverity.MEDIUM,
+                values=(
+                    ConflictingValue(
+                        value=v1.content,
+                        source=v1.source_subsystem or "unknown",
+                        priority=0,
+                        tags=v1.tags,
                     ),
-                    description=f"Conflicting values from same source: {v1.source_subsystem}",
-                    contradiction_points=(
-                        f"Value 1: {str(v1.content)[:100]}",
-                        f"Value 2: {str(v2.content)[:100]}",
+                    ConflictingValue(
+                        value=v2.content,
+                        source=v2.source_subsystem or "unknown",
+                        priority=0,
+                        tags=v2.tags,
                     ),
-                )
+                ),
+                description=f"Conflicting values from same source: {v1.source_subsystem}",
+                contradiction_points=(
+                    f"Value 1: {str(v1.content)[:100]}",
+                    f"Value 2: {str(v2.content)[:100]}",
+                ),
+            )
 
         # Check for semantic conflicts based on meaning
-        if v1.meaning and v2.meaning:
-            # Simple heuristic: same meaning with different content
-            if v1.meaning == v2.meaning and v1.content != v2.content:
+        if v1.meaning and v2.meaning and v1.meaning == v2.meaning and v1.content != v2.content:
                 return Conflict(
                     conflict_type=ConflictType.SEMANTIC,
                     severity=ConflictSeverity.MEDIUM,

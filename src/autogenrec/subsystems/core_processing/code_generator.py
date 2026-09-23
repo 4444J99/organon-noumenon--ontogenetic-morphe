@@ -423,27 +423,27 @@ class CodeCompiler:
     def _to_python(self, structure: SymbolicStructure) -> str:
         """Generate Python code."""
         lines = [
-            f'"""',
+            '"""',
             f'Generated from: {structure.name}',
             f'Type: {structure.structure_type}',
             f'Version: {structure.version}',
-            f'"""',
+            '"""',
             '',
             f'def {self._to_identifier(structure.name)}({", ".join(structure.inputs)}):',
-            f'    """',
+            '    """',
             f'    {structure.structure_type} implementation.',
-            f'    ',
-            f'    Args:',
+            '    ',
+            '    Args:',
         ]
 
         for inp in structure.inputs:
             lines.append(f'        {inp}: Input parameter')
 
         lines.extend([
-            f'    ',
-            f'    Returns:',
+            '    ',
+            '    Returns:',
             f'        tuple: ({", ".join(structure.outputs)})',
-            f'    """',
+            '    """',
         ])
 
         # Add definition-based logic
@@ -596,10 +596,10 @@ class CodeCompiler:
   name: "{structure.name}"
   type: {structure.structure_type}
   version: "{structure.version}"
-  
+
   inputs: [{", ".join(structure.inputs)}]
   outputs: [{", ".join(structure.outputs)}]
-  
+
   definition: {structure.definition}
 }}"""
 
