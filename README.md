@@ -1,7 +1,7 @@
 # Organon Noumenon: Ontogenetic Morphe
 
 [![CI](https://github.com/organvm-i-theoria/organon-noumenon--ontogenetic-morphe/actions/workflows/ci.yml/badge.svg)](https://github.com/organvm-i-theoria/organon-noumenon--ontogenetic-morphe/actions/workflows/ci.yml)
-[![Docs Landing](https://img.shields.io/badge/docs-landing-blue.svg)](https://organvm-i-theoria.github.io/organon-noumenon--ontogenetic-morphe/)
+[![Coverage](https://img.shields.io/badge/coverage-pending-lightgrey)](https://github.com/organvm-i-theoria/organon-noumenon--ontogenetic-morphe)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/organvm-i-theoria/organon-noumenon--ontogenetic-morphe/blob/main/LICENSE)
 [![Organ I](https://img.shields.io/badge/Organ-I%20Theoria-8B5CF6)](https://github.com/organvm-i-theoria)
 [![Status](https://img.shields.io/badge/status-active-brightgreen)](https://github.com/organvm-i-theoria/organon-noumenon--ontogenetic-morphe)
@@ -135,21 +135,10 @@ The subsystems communicate exclusively through the message bus. There are no dir
 ### Install
 
 ```bash
-# Published package
-pip install organon-noumenon--ontogenetic-morphe
-
-# Or from source
+# From source
 git clone https://github.com/organvm-i-theoria/organon-noumenon--ontogenetic-morphe.git
 cd organon-noumenon--ontogenetic-morphe
 pip install -e ".[dev]"
-```
-
-### One-Command Demo
-
-Run the full system demo spanning 10 subsystems in a research-to-revenue pipeline:
-
-```bash
-python -m autogenrec --demo
 ```
 
 ### Quick Start
