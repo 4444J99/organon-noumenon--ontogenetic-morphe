@@ -10,7 +10,6 @@ Usage:
 
 import argparse
 import sys
-from typing import NoReturn
 
 
 def main() -> None:

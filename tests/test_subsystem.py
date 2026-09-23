@@ -2,11 +2,10 @@
 
 import pytest
 
-from autogenrec.core.subsystem import SubsystemMetadata, SubsystemType
-from autogenrec.bus.message_bus import MessageBus
 from autogenrec.core.registry import SubsystemRegistry
-from autogenrec.subsystems.meta.anthology_manager import AnthologyManager
+from autogenrec.core.subsystem import SubsystemMetadata, SubsystemType
 from autogenrec.runtime.orchestrator import Orchestrator, create_default_orchestrator
+from autogenrec.subsystems.meta.anthology_manager import AnthologyManager
 
 
 class TestSubsystemMetadata:

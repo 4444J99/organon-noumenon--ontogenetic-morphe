@@ -259,22 +259,20 @@ class ValidationEngine:
             ))
 
         # Type-specific validation
-        if condition.operator in ("gt", "lt", "gte", "lte"):
-            if not isinstance(condition.value, (int, float)):
-                warnings.append(ValidationError(
-                    code="TYPE_MISMATCH",
-                    message=f"Comparison operator '{condition.operator}' typically used with numbers",
-                    location=f"{loc}.value",
-                    severity="warning",
-                ))
+        if condition.operator in ("gt", "lt", "gte", "lte") and not isinstance(condition.value, (int, float)):
+            warnings.append(ValidationError(
+                code="TYPE_MISMATCH",
+                message=f"Comparison operator '{condition.operator}' typically used with numbers",
+                location=f"{loc}.value",
+                severity="warning",
+            ))
 
-        if condition.operator in ("in", "not_in"):
-            if not isinstance(condition.value, (list, tuple, set, frozenset)):
-                errors.append(ValidationError(
-                    code="TYPE_MISMATCH",
-                    message=f"Operator '{condition.operator}' requires a collection value",
-                    location=f"{loc}.value",
-                ))
+        if condition.operator in ("in", "not_in") and not isinstance(condition.value, (list, tuple, set, frozenset)):
+            errors.append(ValidationError(
+                code="TYPE_MISMATCH",
+                message=f"Operator '{condition.operator}' requires a collection value",
+                location=f"{loc}.value",
+            ))
 
         return errors, warnings
 
@@ -768,7 +766,7 @@ class RuleCompiler(Subsystem):
         """Deactivate a compiled rule."""
         if compiled_id in self._compiled_rules:
             # Create a new rule with deprecated status
-            old = self._compiled_rules[compiled_id]
+            self._compiled_rules[compiled_id]
             # Since CompiledRule is frozen, we need to remove it
             # In a real system, we'd update status in a mutable way
             del self._compiled_rules[compiled_id]

@@ -2,15 +2,12 @@
 
 from datetime import timedelta
 
-import pytest
-
 from autogenrec.subsystems.academic.academia_manager import (
     AcademiaManager,
-    ResearchStatus,
-    PublicationType,
     LearningStatus,
+    PublicationType,
+    ResearchStatus,
 )
-
 
 # ============================================================================
 # AcademiaManager Tests
@@ -93,20 +90,20 @@ class TestResearchProjects:
         am = AcademiaManager()
         p1 = am.create_project(title="Active 1")
         p2 = am.create_project(title="Active 2")
-        p3 = am.create_project(title="Not started")
-        
+        am.create_project(title="Not started")
+
         am.start_project(p1.id)
         am.start_project(p2.id)
-        
+
         active = am.get_active_projects()
         assert len(active) == 2
 
     def test_project_with_deadline(self):
         """Test project with deadline."""
         am = AcademiaManager()
-        from datetime import datetime, UTC, timedelta
+        from datetime import UTC, datetime
         deadline = datetime.now(UTC) + timedelta(days=30)
-        
+
         project = am.create_project(
             title="Deadline Project",
             deadline=deadline,
@@ -155,11 +152,11 @@ class TestPublications:
     def test_different_publication_types(self):
         """Test different publication types."""
         am = AcademiaManager()
-        
+
         paper = am.create_publication("Paper", PublicationType.PAPER)
         thesis = am.create_publication("Thesis", PublicationType.THESIS)
         report = am.create_publication("Report", PublicationType.REPORT)
-        
+
         assert paper.publication_type == PublicationType.PAPER
         assert thesis.publication_type == PublicationType.THESIS
         assert report.publication_type == PublicationType.REPORT
@@ -172,7 +169,7 @@ class TestPublications:
             title="Project Paper",
             project_id=project.id,
         )
-        
+
         pubs = am.get_publications_for_project(project.id)
         assert len(pubs) == 1
         assert pubs[0].id == pub.id
@@ -181,10 +178,10 @@ class TestPublications:
         """Test getting published publications."""
         am = AcademiaManager()
         p1 = am.create_publication(title="Published")
-        p2 = am.create_publication(title="Draft")
-        
+        am.create_publication(title="Draft")
+
         am.publish_publication(p1.id)
-        
+
         published = am.get_published_publications()
         assert len(published) == 1
         assert published[0].id == p1.id
@@ -222,7 +219,7 @@ class TestCitations:
         am.add_citation(title="Machine Learning Basics")
         am.add_citation(title="Deep Learning Advances")
         am.add_citation(title="Web Development Guide")
-        
+
         results = am.search_citations("Learning")
         assert len(results) == 2
 
@@ -232,7 +229,7 @@ class TestCitations:
         am.add_citation(title="Paper 1", authors=["John Smith"])
         am.add_citation(title="Paper 2", authors=["Jane Doe"])
         am.add_citation(title="Paper 3", authors=["John Doe"])
-        
+
         results = am.search_citations("John")
         assert len(results) == 2
 
@@ -270,7 +267,7 @@ class TestLearningCycles:
             title="Test Course",
             topics=["Topic 1", "Topic 2"],
         )
-        
+
         updated = am.update_learning_progress(cycle.id, 50.0, "Topic 1")
         assert updated is not None
         assert updated.progress_percent == 50.0
@@ -281,7 +278,7 @@ class TestLearningCycles:
         """Test completing a learning cycle."""
         am = AcademiaManager()
         cycle = am.create_learning_cycle(title="Test")
-        
+
         completed = am.update_learning_progress(cycle.id, 100.0)
         assert completed is not None
         assert completed.status == LearningStatus.COMPLETED
@@ -293,7 +290,7 @@ class TestLearningCycles:
         am.create_learning_cycle(title="Course 1", learner_id="learner_1")
         am.create_learning_cycle(title="Course 2", learner_id="learner_1")
         am.create_learning_cycle(title="Course 3", learner_id="learner_2")
-        
+
         cycles = am.get_learner_cycles("learner_1")
         assert len(cycles) == 2
 
@@ -305,7 +302,7 @@ class TestArchives:
         """Test archiving a publication."""
         am = AcademiaManager()
         pub = am.create_publication(title="Paper to Archive", content="Some content")
-        
+
         archive = am.archive_publication(pub.id)
         assert archive is not None
         assert archive.source_id == pub.id
@@ -318,7 +315,7 @@ class TestArchives:
         project = am.create_project(title="Project to Archive")
         am.start_project(project.id)
         am.complete_project(project.id)
-        
+
         archive = am.archive_project(project.id)
         assert archive is not None
         assert archive.source_id == project.id
@@ -328,7 +325,7 @@ class TestArchives:
         """Test that incomplete projects cannot be archived."""
         am = AcademiaManager()
         project = am.create_project(title="Incomplete Project")
-        
+
         archive = am.archive_project(project.id)
         assert archive is None
 
@@ -337,11 +334,11 @@ class TestArchives:
         am = AcademiaManager()
         pub = am.create_publication(title="Test")
         archive = am.archive_publication(pub.id)
-        
+
         # First access
         retrieved1 = am.get_archive(archive.id)
         assert retrieved1.access_count == 1
-        
+
         # Second access
         retrieved2 = am.get_archive(archive.id)
         assert retrieved2.access_count == 2
@@ -353,21 +350,21 @@ class TestAcademiaStats:
     def test_get_stats(self):
         """Test getting academia statistics."""
         am = AcademiaManager()
-        
+
         # Create some data
         p1 = am.create_project(title="Project 1")
         am.create_project(title="Project 2")
         am.start_project(p1.id)
         am.complete_project(p1.id)
-        
+
         pub = am.create_publication(title="Pub 1")
         am.create_publication(title="Pub 2")
         am.publish_publication(pub.id)
-        
+
         am.add_citation(title="Citation 1")
         am.create_learning_cycle(title="Course 1")
         am.archive_publication(pub.id)
-        
+
         stats = am.get_stats()
         assert stats.total_projects == 2
         assert stats.completed_projects == 1
@@ -380,14 +377,14 @@ class TestAcademiaStats:
     def test_clear(self):
         """Test clearing all data."""
         am = AcademiaManager()
-        
+
         am.create_project(title="Project")
         am.create_publication(title="Pub")
         am.add_citation(title="Citation")
         am.create_learning_cycle(title="Course")
         pub = am.create_publication(title="Archive this")
         am.archive_publication(pub.id)
-        
+
         projects, pubs, citations, cycles, archives = am.clear()
         assert projects == 1
         assert pubs == 2

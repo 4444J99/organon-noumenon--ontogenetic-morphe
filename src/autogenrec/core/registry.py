@@ -171,8 +171,8 @@ class SubsystemRegistry:
     """
 
     def __init__(self) -> None:
-        self._entries: dict[str, RegistryEntry["Subsystem"]] = {}
-        self._by_type: dict["SubsystemType", list[str]] = {}
+        self._entries: dict[str, RegistryEntry[Subsystem]] = {}
+        self._by_type: dict[SubsystemType, list[str]] = {}
         self._by_tag: dict[str, list[str]] = {}
         self._log = logger.bind(component="subsystem_registry")
 
@@ -293,7 +293,7 @@ class SubsystemRegistry:
         Returns:
             List of matching subsystems
         """
-        results: list["Subsystem"] = []
+        results: list[Subsystem] = []
         for entry in self._entries.values():
             subsystem_tags = entry.item.metadata.tags
             if match_all:

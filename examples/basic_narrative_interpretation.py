@@ -11,15 +11,15 @@ This shows the identity subsystem:
 ENTITY -> MASK -> SEGMENT -> ACCESS_LEVEL
 """
 
+from autogenrec.subsystems.identity.audience_classifier import (
+    AccessLevel,
+    AudienceClassifier,
+    RuleOperator,
+    SegmentType,
+)
 from autogenrec.subsystems.identity.mask_generator import (
     MaskGenerator,
     MaskType,
-)
-from autogenrec.subsystems.identity.audience_classifier import (
-    AudienceClassifier,
-    SegmentType,
-    AccessLevel,
-    RuleOperator,
 )
 
 
@@ -61,7 +61,7 @@ def main():
     print(f"    Type: {premium_mask.mask_type.name}")
 
     guest_mask = masks.generate_anonymous_mask()
-    print(f"  Created: anonymous mask")
+    print("  Created: anonymous mask")
     print(f"    Type: {guest_mask.mask_type.name}")
     print()
 
@@ -176,12 +176,12 @@ def main():
     mask_stats = masks.get_stats()
     classifier_stats = classifier.get_stats()
 
-    print(f"  Mask Generator:")
+    print("  Mask Generator:")
     print(f"    Total masks: {mask_stats.total_masks}")
     print(f"    Active: {mask_stats.active_masks}")
     print(f"    By type: {mask_stats.masks_by_type}")
 
-    print(f"  Audience Classifier:")
+    print("  Audience Classifier:")
     print(f"    Segments: {classifier_stats.total_segments}")
     print(f"    Members: {classifier_stats.total_members}")
     print(f"    Memberships: {classifier_stats.total_memberships}")

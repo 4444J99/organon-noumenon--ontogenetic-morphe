@@ -8,7 +8,7 @@ occur in ordered sequence and time-dependent processes are synchronized.
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from enum import Enum, auto
-from typing import Any, Callable
+from typing import Any
 
 import structlog
 from pydantic import BaseModel, ConfigDict, Field

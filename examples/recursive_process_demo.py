@@ -11,7 +11,8 @@ This shows the recursive-generative core:
 INTAKE -> PROCESS -> EVALUATE -> INTEGRATE -> (feedback) -> INTAKE...
 """
 
-import asyncio
+
+from decimal import Decimal
 
 from autogenrec.subsystems.temporal.evolution_scheduler import (
     EvolutionScheduler,
@@ -20,17 +21,15 @@ from autogenrec.subsystems.temporal.evolution_scheduler import (
 )
 from autogenrec.subsystems.temporal.time_manager import (
     TimeManager,
-    CycleType,
-)
-from autogenrec.subsystems.transformation.process_converter import (
-    ProcessConverter,
-    ConversionFormat,
 )
 from autogenrec.subsystems.transformation.consumption_manager import (
     ConsumptionManager,
     ResourceType,
 )
-from decimal import Decimal
+from autogenrec.subsystems.transformation.process_converter import (
+    ConversionFormat,
+    ProcessConverter,
+)
 
 
 def main():
@@ -41,7 +40,7 @@ def main():
 
     # Initialize subsystems
     evolution = EvolutionScheduler()
-    time_mgr = TimeManager()
+    TimeManager()
     converter = ProcessConverter()
     consumption = ConsumptionManager()
 
@@ -160,7 +159,7 @@ def main():
 
     # Convert to different formats
     json_result = converter.convert(process.id, ConversionFormat.JSON)
-    print(f"\n  JSON Format:")
+    print("\n  JSON Format:")
     print(f"    Success: {json_result.success}")
     if json_result.success:
         content = json_result.output.content
@@ -168,11 +167,11 @@ def main():
             print(f"    Keys: {list(content.keys())}")
 
     yaml_result = converter.convert(process.id, ConversionFormat.YAML)
-    print(f"\n  YAML Format:")
+    print("\n  YAML Format:")
     print(f"    Success: {yaml_result.success}")
 
     schema_result = converter.convert(process.id, ConversionFormat.SCHEMA)
-    print(f"\n  Schema Format:")
+    print("\n  Schema Format:")
     print(f"    Success: {schema_result.success}")
     print()
 
@@ -188,14 +187,14 @@ def main():
         Decimal("1"),
     )
 
-    print(f"  Compute Resources:")
-    print(f"    Total Allocated: 1000 units")
+    print("  Compute Resources:")
+    print("    Total Allocated: 1000 units")
     print(f"    Remaining: {remaining} units")
     print(f"    Used: {1000 - int(remaining)} units")
-    print(f"    Per Cycle: ~50 units")
+    print("    Per Cycle: ~50 units")
 
     consumption_stats = consumption.get_stats()
-    print(f"\n  Consumption Stats:")
+    print("\n  Consumption Stats:")
     print(f"    Total Events: {consumption_stats.total_events}")
     print(f"    Approved: {consumption_stats.consumed_count}")
     print(f"    Denied: {consumption_stats.rejected_count}")
