@@ -59,10 +59,13 @@ class MessageBus:
     """
 
     def __init__(self, max_concurrent_handlers: int = 100) -> None:
+        if max_concurrent_handlers <= 0:
+            raise ValueError("max_concurrent_handlers must be positive")
         self._subscriptions: dict[str, list[Subscription]] = defaultdict(list)
         self._subscriptions_by_id: dict[str, Subscription] = {}
         self._stats = MessageBusStats()
         self._max_concurrent = max_concurrent_handlers
+        self._limiter = anyio.CapacityLimiter(self._max_concurrent)
         self._log = logger.bind(component="message_bus")
 
     @property
@@ -202,10 +205,11 @@ class MessageBus:
             results: list[bool] = []
 
             async def track_delivery(sub: Subscription) -> None:
-                result = await deliver(sub)
-                results.append(result)
+                async with self._limiter:
+                    result = await deliver(sub)
+                    results.append(result)
 
-            for sub in matching[:self._max_concurrent]:
+            for sub in matching:
                 tg.start_soon(track_delivery, sub)
 
         delivered = sum(1 for r in results if r)
