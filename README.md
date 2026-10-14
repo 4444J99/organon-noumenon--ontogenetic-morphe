@@ -48,7 +48,7 @@ Every computation in the system follows a single abstract protocol defined by `P
 ```
 INTAKE → PROCESS → EVALUATE → INTEGRATE
   ↑                    │
-  └────────────────────┘
+  └──────────────────────────────────────┘
         (feedback: should_continue)
 ```
 
@@ -61,10 +61,10 @@ The generic type parameters (`InputT`, `OutputT`, `ContextT`) ensure that each s
 `SymbolicValue` is the atomic unit of meaning in the system — a frozen Pydantic model carrying:
 
 - **ULID identity** — globally unique, time-sortable, no coordination required
-- **Value type** — one of 23 enumerated kinds: `NARRATIVE`, `DREAM`, `RULE`, `PATTERN`, `TOKEN`, `CURRENCY`, `MASK`, `SIGNAL`, `ECHO`, `REFERENCE`, `ARCHIVE`, `CONFLICT`, `RESOLUTION`, `NODE`, `ROUTE`, `THRESHOLD`, `PROCESS`, `CONSUMPTION`, `EVOLUTION`, `LOCATION`, `AUDIENCE`, `ACADEMIA`, `ANTHOLOGY`
+- **Value type** — one of the enumerated kinds in `SymbolicValueType` (NARRATIVE, DREAM, RULE, PATTERN, TOKEN, CURRENCY, MASK, SIGNAL, ECHO, REFERENCE, ARCHIVE, …)
 - **Provenance chain** — every value records its origin; the `derive()` method creates a new value linked to its parent, building a directed acyclic graph of symbolic lineage
 
-This is not a tagged union for dispatch convenience. The type system reflects an ontological claim: these 23 categories constitute the *morphological vocabulary* of the system. A `DREAM` value behaves differently from a `RULE` value not because of arbitrary business logic but because dreams and rules have different ontogenetic trajectories — dreams decay into echoes, rules compile into executable form.
+This is not a tagged union for dispatch convenience. The type system reflects an ontological claim: these categories constitute the *morphological vocabulary* of the system. A `DREAM` value behaves differently from a `RULE` value not because of arbitrary business logic but because dreams and rules have different ontogenetic trajectories — dreams decay into echoes, rules compile into executable form.
 
 ### Signals, Echoes, and Temporal Decay
 
@@ -136,7 +136,7 @@ The subsystems communicate exclusively through the message bus. There are no dir
 
 ```bash
 # From source
-git clone https://github.com/organvm-i-theoria/organon-noumenon--ontogenetic-morphe.git
+git clone https://github.com/4444J99/organon-noumenon--ontogenetic-morphe.git
 cd organon-noumenon--ontogenetic-morphe
 pip install -e ".[dev]"
 ```
@@ -145,28 +145,39 @@ pip install -e ".[dev]"
 
 ```python
 import anyio
-from autogenrec.core.symbolic import SymbolicValue, ValueType
-from autogenrec.core.messaging import MessageBus, Message
-from autogenrec.orchestrator import Orchestrator
+from autogenrec.core.symbolic import SymbolicValue, SymbolicValueType
+from autogenrec.core.signals import Message
+from autogenrec.runtime.orchestrator import create_default_orchestrator
 
 async def main():
     # Create a symbolic value
-    dream = SymbolicValue(value_type=ValueType.DREAM, content="recursive mirror")
+    dream = SymbolicValue(type=SymbolicValueType.DREAM, content="recursive mirror")
     
     # Derive a new value with lineage tracking
-    pattern = dream.derive(value_type=ValueType.PATTERN, content="self-reference detected")
+    pattern = dream.derive(type=SymbolicValueType.PATTERN, content="self-reference detected")
     
     # Start the full 22-subsystem orchestrator
-    orchestrator = Orchestrator()
-    async with orchestrator:
+    orchestrator = create_default_orchestrator()
+    async with orchestrator.run_context():
         # Publish a message to the bus
-        await orchestrator.bus.publish(
-            "value.created",
-            Message(payload=pattern)
+        await orchestrator.message_bus.publish(
+            Message.event(
+                "value.created",
+                "example",
+                {"value_id": pattern.id, "content": pattern.content},
+            )
         )
 
 anyio.run(main)
 ```
+
+**Minimal supported imports** (stable public SDK surface for downstream organs):
+
+- `SymbolicValue`, `SymbolicValueType` — `autogenrec.core.symbolic` (also re-exported from `autogenrec`)
+- `ProcessLoop`, `ProcessPhase`, `ProcessState` — `autogenrec.core.process`
+- `MessageBus` — `autogenrec.bus`
+- `Orchestrator`, `create_default_orchestrator` — `autogenrec.runtime.orchestrator`
+- `Message` — `autogenrec.core.signals`
 
 ### Development
 
